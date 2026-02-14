@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useAccount, useConnect } from 'wagmi';
 import { injected } from 'wagmi/connectors';
-import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import WalletModal from '../components/WalletModal';
 
