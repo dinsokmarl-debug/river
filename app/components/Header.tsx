@@ -1,11 +1,30 @@
 
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import WalletModal from './WalletModal';
 
 export default function Header() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [walletAddress, setWalletAddress] = useState<string | null>(null);
+    const [btcPrice, setBtcPrice] = useState<string>('...');
+
+    useEffect(() => {
+        const fetchPrice = async () => {
+            try {
+                const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+                if (res.ok) {
+                    const data = await res.json();
+                    setBtcPrice(`$${data.bitcoin.usd.toLocaleString()}`);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        };
+        fetchPrice();
+        // Refresh every 30s
+        const interval = setInterval(fetchPrice, 30000);
+        return () => clearInterval(interval);
+    }, []);
 
     const handleConnect = (walletName: string) => {
         // Simulating connection
@@ -19,7 +38,7 @@ export default function Header() {
                 <div className="flex items-center gap-6 text-sm font-mono text-white/60">
                     <div className="flex items-center gap-2">
                         <span className="w-2 h-2 bg-[#F0B90B] rounded-full"></span>
-                        <span>BINANCE PRICE: $68,420</span>
+                        <span>BINANCE PRICE: {btcPrice}</span>
                     </div>
                     <div className="w-px h-4 bg-white/10"></div>
                     <div>GAS: 12 Gwei</div>

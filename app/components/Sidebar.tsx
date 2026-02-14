@@ -15,7 +15,7 @@ const Sidebar = () => {
             </Link>
 
             <nav className="flex-1 space-y-2">
-                {['Dashboard', 'Stake', 'Liquid Stake', 'Mint', 'Airdrop'].map((item) => {
+                {['Dashboard', 'Airdrop'].map((item) => {
                     const isActive = pathname === (item === 'Dashboard' ? '/' : `/${item.toLowerCase().replace(' ', '-')}`);
                     return (
                         <Link
