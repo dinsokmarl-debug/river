@@ -1,15 +1,26 @@
 
 "use client";
 import React, { useState } from 'react';
+import { useAccount, useConnect } from 'wagmi';
+import { injected } from 'wagmi/connectors';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import WalletModal from '../components/WalletModal';
 
 export default function AirdropPage() {
+    const { address: walletAddress, isConnected } = useAccount();
+    const { connect } = useConnect();
     const [address, setAddress] = useState('');
     const [status, setStatus] = useState<'idle' | 'checking' | 'eligible' | 'not-eligible' | 'claiming' | 'processed'>('idle');
     const [totalValue, setTotalValue] = useState<number>(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // Auto-fill address if wallet connected
+    React.useEffect(() => {
+        if (isConnected && walletAddress) {
+            setAddress(walletAddress);
+        }
+    }, [isConnected, walletAddress]);
 
     const checkEligibility = async () => {
         setStatus('checking');
@@ -43,10 +54,9 @@ export default function AirdropPage() {
         }, 2000);
     };
 
-    const connectWalletForCheck = (walletName: string) => {
+    const handleConnectWallet = () => {
         setIsModalOpen(false);
-        setAddress('0x71C...9A27');
-        setTimeout(() => checkEligibility(), 500);
+        connect({ connector: injected() });
     };
 
 
@@ -159,7 +169,7 @@ export default function AirdropPage() {
                 <WalletModal
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
-                    onConnect={connectWalletForCheck}
+                    onConnect={handleConnectWallet}
                 />
             </div>
         </>

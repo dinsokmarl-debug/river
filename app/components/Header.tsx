@@ -1,11 +1,13 @@
-
-"use client";
 import { useState, useEffect } from 'react';
+import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { injected } from 'wagmi/connectors';
 import WalletModal from './WalletModal';
 
 export default function Header() {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [walletAddress, setWalletAddress] = useState<string | null>(null);
+    const { address, isConnected } = useAccount();
+    const { connect } = useConnect();
+    const { disconnect } = useDisconnect();
     const [btcPrice, setBtcPrice] = useState<string>('...');
 
     useEffect(() => {
@@ -26,10 +28,9 @@ export default function Header() {
         return () => clearInterval(interval);
     }, []);
 
-    const handleConnect = (walletName: string) => {
-        // Simulating connection
+    const handleConnect = () => {
+        connect({ connector: injected() });
         setIsModalOpen(false);
-        setWalletAddress('0x71C...9A21');
     };
 
     return (
@@ -45,17 +46,17 @@ export default function Header() {
                 </div>
 
                 <button
-                    onClick={() => !walletAddress && setIsModalOpen(true)}
+                    onClick={() => isConnected ? disconnect() : setIsModalOpen(true)}
                     className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-medium text-sm transition-all duration-300
-            ${walletAddress
+            ${isConnected
                             ? 'bg-white/10 text-white border border-white/20'
                             : 'bg-white text-black hover:bg-white/90 shadow-[0_0_15px_rgba(255,255,255,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.5)]'
                         }`}
                 >
-                    {walletAddress ? (
+                    {isConnected && address ? (
                         <>
                             <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                            {walletAddress}
+                            {address.slice(0, 6)}...{address.slice(-4)}
                         </>
                     ) : (
                         'Connect Wallet'
@@ -74,23 +75,12 @@ export default function Header() {
                         </div>
 
                         <div className="space-y-3">
-                            <button onClick={() => handleConnect('Binance')} className="w-full flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 rounded-xl transition group">
+                            <button onClick={handleConnect} className="w-full flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 rounded-xl transition group">
                                 <div className="flex items-center gap-3">
-                                    {/* Use local asset or fallback */}
-                                    <img src="/assets/binance-wallet.svg" className="w-8 h-8" alt="Binance" />
-                                    <span className="font-medium text-white">Binance Wallet</span>
+                                    <div className="w-8 h-8 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-500">🦊</div>
+                                    <span className="font-medium text-white">Browser Wallet (MetaMask)</span>
                                 </div>
                                 <div className="px-2 py-0.5 text-[10px] font-bold bg-[#F0B90B] text-black rounded uppercase tracking-wider">Popular</div>
-                            </button>
-
-                            <button onClick={() => handleConnect('MetaMask')} className="w-full flex items-center gap-3 p-4 bg-transparent hover:bg-white/5 border border-transparent hover:border-white/10 rounded-xl transition text-white/60 hover:text-white">
-                                <div className="w-8 h-8 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-500">🦊</div>
-                                <span className="font-medium">MetaMask</span>
-                            </button>
-
-                            <button onClick={() => handleConnect('WalletConnect')} className="w-full flex items-center gap-3 p-4 bg-transparent hover:bg-white/5 border border-transparent hover:border-white/10 rounded-xl transition text-white/60 hover:text-white">
-                                <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500">📡</div>
-                                <span className="font-medium">WalletConnect</span>
                             </button>
                         </div>
                     </div>
