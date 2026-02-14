@@ -1,14 +1,9 @@
-import { http, createConfig } from 'wagmi'
-import { mainnet, sepolia } from 'wagmi/chains'
-import { injected } from 'wagmi/connectors'
+import { getDefaultConfig } from '@rainbow-me/rainbowkit';
+import { mainnet, sepolia } from 'wagmi/chains';
 
-export const config = createConfig({
+export const config = getDefaultConfig({
+    appName: 'River Protocol',
+    projectId: 'YOUR_PROJECT_ID',
     chains: [mainnet, sepolia],
-    connectors: [
-        injected(),
-    ],
-    transports: {
-        [mainnet.id]: http(),
-        [sepolia.id]: http(),
-    },
-})
+    ssr: true, // If your dApp uses server side rendering (SSR)
+});

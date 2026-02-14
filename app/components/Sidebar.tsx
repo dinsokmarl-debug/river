@@ -9,7 +9,7 @@ const Sidebar = () => {
     const pathname = usePathname();
 
     return (
-        <aside className="fixed left-0 top-0 bottom-0 w-64 border-r border-white/5 bg-black/50 backdrop-blur-xl z-50 flex flex-col p-6">
+        <aside className="fixed left-0 top-0 bottom-0 w-64 border-r border-white/5 bg-black/50 backdrop-blur-xl z-50 flex-col p-6 hidden lg:flex">
             <Link href="/" className="mb-12 block">
                 <img src="/assets/river-text-white.svg" alt="River" className="h-8" />
             </Link>
@@ -44,4 +44,32 @@ const Sidebar = () => {
     );
 };
 
-export default Sidebar;
+const MobileNav = () => {
+    const pathname = usePathname();
+    return (
+        <nav className="fixed bottom-0 left-0 right-0 h-16 bg-[#111] border-t border-white/10 z-[60] flex items-center justify-around lg:hidden pb-safe backdrop-blur-md">
+            {['Dashboard', 'Airdrop'].map((item) => {
+                const isActive = pathname === (item === 'Dashboard' ? '/' : `/${item.toLowerCase().replace(' ', '-')}`);
+                return (
+                    <Link
+                        key={item}
+                        href={item === 'Dashboard' ? '/' : `/${item.toLowerCase().replace(' ', '-')}`}
+                        className={`flex flex-col items-center gap-1 ${isActive ? 'text-white' : 'text-white/40'}`}
+                    >
+                        <span className="text-xs font-medium">{item}</span>
+                        {isActive && <div className="w-1 h-1 bg-white rounded-full mt-1"></div>}
+                    </Link>
+                );
+            })}
+        </nav>
+    );
+};
+
+export default function SidebarWrapper() {
+    return (
+        <>
+            <Sidebar />
+            <MobileNav />
+        </>
+    );
+}

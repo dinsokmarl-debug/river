@@ -39,11 +39,11 @@ export default function Home() {
   return (
     <>
       <Sidebar />
-      <div className="flex-1 flex flex-col ml-64 relative min-h-screen">
+      <div className="flex-1 flex flex-col lg:ml-64 relative min-h-screen">
         <Header />
 
         <main className="flex-1 p-8 overflow-y-auto pt-28">
-          <div className="max-w-7xl mx-auto grid grid-cols-12 gap-6">
+          <div className="max-w-7xl mx-auto flex flex-col lg:grid lg:grid-cols-12 gap-6 pb-20 lg:pb-0">
 
             {/* Hero Section */}
             <div className="col-span-12 lg:col-span-8 relative group">

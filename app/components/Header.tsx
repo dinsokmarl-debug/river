@@ -1,13 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useAccount, useConnect, useDisconnect } from 'wagmi';
-import { injected } from 'wagmi/connectors';
-import WalletModal from './WalletModal';
+import { useAccount } from 'wagmi';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 export default function Header() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const { address, isConnected } = useAccount();
-    const { connect } = useConnect();
-    const { disconnect } = useDisconnect();
+    const { isConnected } = useAccount();
     const [btcPrice, setBtcPrice] = useState<string>('...');
 
     useEffect(() => {
@@ -28,64 +24,80 @@ export default function Header() {
         return () => clearInterval(interval);
     }, []);
 
-    const handleConnect = () => {
-        connect({ connector: injected() });
-        setIsModalOpen(false);
-    };
-
     return (
-        <>
-            <header className="fixed top-0 left-64 right-0 h-20 border-b border-white/5 bg-black/50 backdrop-blur-md z-40 flex items-center justify-end px-8 gap-6">
-                <div className="flex items-center gap-6 text-sm font-mono text-white/60">
-                    <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 bg-[#F0B90B] rounded-full"></span>
-                        <span>BINANCE PRICE: {btcPrice}</span>
-                    </div>
-                    <div className="w-px h-4 bg-white/10"></div>
-                    <div>GAS: 12 Gwei</div>
+        <header className="fixed top-0 left-0 lg:left-64 right-0 h-16 lg:h-20 border-b border-white/5 bg-black/50 backdrop-blur-md z-40 flex items-center justify-between lg:justify-end px-4 lg:px-8 gap-6">
+            <div className="lg:hidden">
+                <img src="/assets/river-text-white.svg" alt="River" className="h-6" />
+            </div>
+
+            <div className="hidden lg:flex items-center gap-6 text-sm font-mono text-white/60">
+                <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-[#F0B90B] rounded-full"></span>
+                    <span>BINANCE PRICE: {btcPrice}</span>
                 </div>
+                <div className="w-px h-4 bg-white/10"></div>
+                <div>GAS: 12 Gwei</div>
+            </div>
 
-                <button
-                    onClick={() => isConnected ? disconnect() : setIsModalOpen(true)}
-                    className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-medium text-sm transition-all duration-300
-            ${isConnected
-                            ? 'bg-white/10 text-white border border-white/20'
-                            : 'bg-white text-black hover:bg-white/90 shadow-[0_0_15px_rgba(255,255,255,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.5)]'
-                        }`}
-                >
-                    {isConnected && address ? (
-                        <>
-                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                            {address.slice(0, 6)}...{address.slice(-4)}
-                        </>
-                    ) : (
-                        'Connect Wallet'
-                    )}
-                </button>
-            </header>
+            <ConnectButton.Custom>
+                {({
+                    account,
+                    chain,
+                    openAccountModal,
+                    openChainModal,
+                    openConnectModal,
+                    authenticationStatus,
+                    mounted,
+                }) => {
+                    // Note: If your app doesn't use authentication, you
+                    // can remove all 'authenticationStatus' checks
+                    const ready = mounted && authenticationStatus !== 'loading';
+                    const connected =
+                        ready &&
+                        account &&
+                        chain &&
+                        (!authenticationStatus ||
+                            authenticationStatus === 'authenticated');
 
-            {isModalOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div className="bg-[#111] border border-white/10 rounded-3xl p-6 w-full max-w-sm shadow-2xl relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-purple-500"></div>
+                    return (
+                        <div
+                            {...(!ready && {
+                                'aria-hidden': true,
+                                'style': {
+                                    opacity: 0,
+                                    pointerEvents: 'none',
+                                    userSelect: 'none',
+                                },
+                            })}
+                        >
+                            {(() => {
+                                if (!connected) {
+                                    return (
+                                        <button onClick={openConnectModal} className="flex items-center gap-2 px-6 py-2.5 rounded-full font-medium text-sm transition-all duration-300 bg-white text-black hover:bg-white/90 shadow-[0_0_15px_rgba(255,255,255,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.5)]">
+                                            Connect Wallet
+                                        </button>
+                                    );
+                                }
 
-                        <div className="flex justify-between items-center mb-6">
-                            <h3 className="text-xl font-semibold text-white">Connect Wallet</h3>
-                            <button onClick={() => setIsModalOpen(false)} className="text-white/40 hover:text-white transition">✕</button>
+                                if (chain.unsupported) {
+                                    return (
+                                        <button onClick={openChainModal} className="px-6 py-2.5 rounded-full font-medium text-sm bg-red-500 text-white hover:bg-red-600 transition">
+                                            Wrong network
+                                        </button>
+                                    );
+                                }
+
+                                return (
+                                    <button onClick={openAccountModal} className="flex items-center gap-2 px-6 py-2.5 rounded-full font-medium text-sm transition-all duration-300 bg-white/10 text-white border border-white/20 hover:bg-white/20">
+                                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                        {account.displayName}
+                                    </button>
+                                );
+                            })()}
                         </div>
-
-                        <div className="space-y-3">
-                            <button onClick={handleConnect} className="w-full flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 rounded-xl transition group">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-500">🦊</div>
-                                    <span className="font-medium text-white">Browser Wallet (MetaMask)</span>
-                                </div>
-                                <div className="px-2 py-0.5 text-[10px] font-bold bg-[#F0B90B] text-black rounded uppercase tracking-wider">Popular</div>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-        </>
+                    );
+                }}
+            </ConnectButton.Custom>
+        </header>
     );
 }
