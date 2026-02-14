@@ -9,6 +9,7 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'River - Liquid Staking',
   description: 'The next generation of liquid staking.',
+  viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0',
 };
 
 export default function RootLayout({
@@ -18,7 +19,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-black text-white relative h-screen overflow-hidden`}>
+      <body className={`${inter.className} bg-black text-white relative min-h-screen overflow-x-hidden`}>
         <div className="fixed top-0 left-0 w-full bg-red-600/90 text-white text-center text-xs font-bold py-1 z-[9999] backdrop-blur-md shadow-lg pointer-events-none">
           EDUCATIONAL PURPOSE ONLY - DO NOT USE REAL FUNDS
         </div>

@@ -63,13 +63,13 @@ export default function AirdropPage() {
     return (
         <>
             <Sidebar />
-            <div className="flex-1 flex flex-col lg:ml-64 min-h-screen bg-black relative overflow-hidden w-full">
+            <div className="lg:ml-64 min-h-screen bg-black relative w-full overflow-x-hidden">
                 {/* Ambient Backgound specifically for Airdrop */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[150px] pointer-events-none"></div>
 
                 <Header />
 
-                <main className="flex-1 flex flex-col items-center justify-center p-4 pt-28 lg:pt-0 pb-32 lg:pb-0 relative z-10 w-full">
+                <main className="flex flex-col items-center justify-center min-h-screen p-4 pt-32 pb-32 relative z-10 w-full">
 
                     <div className="mb-8">
                         <img src="/assets/river-logo-white.svg" alt="River Logo" className="w-24 h-24 mx-auto animate-pulse-slow" />
