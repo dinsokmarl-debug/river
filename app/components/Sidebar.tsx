@@ -9,7 +9,7 @@ const Sidebar = () => {
     const pathname = usePathname();
 
     return (
-        <aside className="fixed left-0 top-0 bottom-0 w-64 border-r border-white/5 bg-black/50 backdrop-blur-xl z-50 flex-col p-6 hidden lg:flex">
+        <aside className="fixed left-0 top-0 bottom-0 w-64 border-r border-white/5 bg-black/50 backdrop-blur-xl z-50 flex-col p-6 hidden xl:flex">
             <Link href="/" className="mb-12 block">
                 <img src="/assets/river-text-white.svg" alt="River" className="h-8" />
             </Link>

@@ -39,7 +39,7 @@ export default function Home() {
   return (
     <>
       <Sidebar />
-      <div className="flex-1 flex flex-col lg:ml-64 relative min-h-screen">
+      <div className="flex-1 flex flex-col xl:ml-64 relative min-h-screen">
         <Header />
 
         <main className="flex-1 p-8 overflow-y-auto pt-28">
