@@ -38,7 +38,9 @@ export default function Home() {
   };
   return (
     <>
-      <Sidebar />
+      <div className="hidden xl:block">
+        <Sidebar />
+      </div>
       <div className="flex-1 flex flex-col xl:ml-64 relative min-h-screen">
         <Header />
 
