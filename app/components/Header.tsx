@@ -25,7 +25,7 @@ export default function Header() {
     }, []);
 
     return (
-        <header className="fixed top-0 left-0 lg:left-64 right-0 h-16 lg:h-20 border-b border-white/5 bg-black/50 backdrop-blur-md z-40 flex items-center justify-between lg:justify-end px-4 lg:px-8 gap-6">
+        <header className="fixed top-0 left-0 right-0 h-16 lg:h-20 lg:left-64 lg:w-[calc(100%-16rem)] border-b border-white/5 bg-black/90 backdrop-blur-md z-50 flex items-center justify-between lg:justify-end px-4 lg:px-8 gap-6 transition-all duration-300">
             <div className="lg:hidden">
                 <img src="/assets/river-text-white.svg" alt="River" className="h-6" />
             </div>
