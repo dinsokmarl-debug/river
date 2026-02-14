@@ -28,10 +28,10 @@ export default function Header() {
     }, []);
 
     return (
-        <header className="fixed top-0 left-0 right-0 h-16 lg:h-20 xl:left-64 xl:w-[calc(100%-16rem)] border-b border-white/5 bg-black/90 backdrop-blur-md z-50 flex items-center justify-between xl:justify-end px-4 lg:px-8 gap-4 transition-all duration-300">
+        <header className="fixed top-0 left-0 right-0 h-16 lg:h-20 border-b border-white/5 bg-black/90 backdrop-blur-md z-50 flex items-center justify-between px-4 lg:px-8 gap-4 transition-all duration-300">
 
-            {/* Mobile/Tablet Nav Links (Menu Bar) - Visible up to xl */}
-            <div className="xl:hidden flex items-center gap-6">
+            {/* Nav Links (Menu Bar) - Visible always now */}
+            <div className="flex items-center gap-6">
                 <Link href="/" className="block">
                     <img src="/assets/river-text-white.svg" alt="River" className="h-5" />
                 </Link>
@@ -53,7 +53,7 @@ export default function Header() {
                 </nav>
             </div>
 
-            {/* Desktop Info - Only visible on xl and above */}
+            {/* Desktop Info - visible on larger screens */}
             <div className="hidden xl:flex items-center gap-6 text-sm font-mono text-white/60">
                 <div className="flex items-center gap-2">
                     <span className="w-2 h-2 bg-[#F0B90B] rounded-full"></span>

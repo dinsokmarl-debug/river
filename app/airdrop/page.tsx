@@ -62,10 +62,7 @@ export default function AirdropPage() {
 
     return (
         <>
-            <div className="hidden xl:block">
-                <Sidebar />
-            </div>
-            <div className="xl:ml-64 min-h-screen bg-black relative w-full overflow-x-hidden">
+            <div className="min-h-screen bg-black relative w-full overflow-x-hidden">
                 {/* Ambient Backgound specifically for Airdrop */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[150px] pointer-events-none"></div>
 
