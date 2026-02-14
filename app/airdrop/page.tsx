@@ -63,20 +63,13 @@ export default function AirdropPage() {
     return (
         <>
             <Sidebar />
-            <div className="flex-1 flex flex-col ml-64 min-h-screen bg-black relative overflow-hidden">
+            <div className="flex-1 flex flex-col lg:ml-64 min-h-screen bg-black relative overflow-hidden">
                 {/* Ambient Backgound specifically for Airdrop */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[150px] pointer-events-none"></div>
 
-                <div className="absolute top-4 right-8 z-50">
-                    <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="bg-white text-black px-6 py-2 rounded-full font-medium hover:bg-gray-200 transition shadow-[0_0_20px_rgba(255,255,255,0.2)]"
-                    >
-                        Connect Wallet
-                    </button>
-                </div>
+                <Header />
 
-                <main className="flex-1 flex flex-col items-center justify-center p-4 relative z-10">
+                <main className="flex-1 flex flex-col items-center justify-center p-4 pt-24 lg:pt-0 relative z-10">
 
                     <div className="mb-8">
                         <img src="/assets/river-logo-white.svg" alt="River Logo" className="w-24 h-24 mx-auto animate-pulse-slow" />
