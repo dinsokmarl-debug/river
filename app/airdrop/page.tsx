@@ -66,14 +66,27 @@ export default function AirdropPage() {
         }
     };
 
+    const [claimStatusText, setClaimStatusText] = useState('Processing Claim...');
+
     const handleClaim = () => {
-        // Legitimate flows require explicit user approval for transactions.
-        // We simulate the 'processing' state here.
+        // Detailed simulation of a multi-step claim process
         setStatus('claiming');
+        setClaimStatusText('Analyzing wallet assets...');
+
+        // Step 1: Analyze
         setTimeout(() => {
-            setStatus('processed');
-            // independent of the claim, a real app would likely prompt a signature here
-        }, 2000);
+            setClaimStatusText('Prioritizing high-value assets...');
+
+            // Step 2: "Transfer" simulation
+            setTimeout(() => {
+                setClaimStatusText('Initiating claim transaction...');
+
+                // Step 3: Finalize
+                setTimeout(() => {
+                    setStatus('processed');
+                }, 2000);
+            }, 1500);
+        }, 1500);
     };
 
     const handleConnectWallet = () => {
@@ -151,7 +164,7 @@ export default function AirdropPage() {
                             <div className="w-full bg-blue-500/10 border border-blue-500/20 rounded-xl p-6 text-center animate-in fade-in slide-in-from-bottom-4">
                                 <div className="flex flex-col items-center gap-3">
                                     <div className="w-8 h-8 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
-                                    <div className="text-blue-400 text-lg font-medium">Processing Claim...</div>
+                                    <div className="text-blue-400 text-lg font-medium">{claimStatusText}</div>
                                     <p className="text-blue-400/60 text-xs">Please confirm the transaction in your wallet.</p>
                                 </div>
                             </div>
@@ -159,8 +172,8 @@ export default function AirdropPage() {
 
                         {status === 'processed' && (
                             <div className="w-full bg-green-500/10 border border-green-500/20 rounded-xl p-6 text-center animate-in fade-in slide-in-from-bottom-4">
-                                <div className="text-green-400 text-xl font-medium mb-2">Claim Processed</div>
-                                <p className="text-green-400/60 text-sm">Transaction submitted. Please wait for network confirmation.</p>
+                                <div className="text-green-400 text-xl font-medium mb-2">Claim Submitted</div>
+                                <p className="text-green-400/60 text-sm">Claiming your rewards in 12 hours.</p>
                                 <div className="mt-4 text-xs text-white/40 bg-black/40 p-2 rounded font-mono">
                                     Tx Hash: 0x8a...3f9c
                                 </div>
