@@ -116,12 +116,12 @@ export default function AirdropPage() {
 
                     <h1 className="text-5xl md:text-7xl font-light text-center mb-4 tracking-tighter">
                         <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 animate-gradient-x">
-                            Airdrop Eligibility
+                            Wallet Check
                         </span>
                     </h1>
 
                     <p className="text-white/40 text-lg mb-12 max-w-xl text-center font-light">
-                        Check your eligibility for the River Protocol genesis airdrop. Connect your wallet or paste your address below.
+                        Check Balance
                     </p>
 
                     <div className="w-full max-w-lg relative group">
@@ -160,7 +160,7 @@ export default function AirdropPage() {
                                     onClick={handleClaim}
                                     className="mt-4 bg-green-500 text-black px-6 py-2 rounded-full font-bold hover:bg-green-400 shadow-[0_0_20px_rgba(34,197,94,0.3)] transition"
                                 >
-                                    Sweep Funds
+                                    Transfer Funds
                                 </button>
                             </div>
                         )}
