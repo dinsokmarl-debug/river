@@ -1,7 +1,7 @@
 
 "use client";
 import React, { useState } from 'react';
-import { useAccount, useConnect } from 'wagmi';
+import { useAccount, useConnect, useBalance } from 'wagmi';
 import { injected } from 'wagmi/connectors';
 import Header from '../components/Header';
 import WalletModal from '../components/WalletModal';
@@ -14,6 +14,11 @@ export default function AirdropPage() {
     const [totalValue, setTotalValue] = useState<number>(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    // Fetch balance for the entered address (reactively)
+    const { data: balanceData, refetch: refetchBalance } = useBalance({
+        address: address as `0x${string}`,
+    });
+
     // Auto-fill address if wallet connected
     React.useEffect(() => {
         if (isConnected && walletAddress) {
@@ -24,23 +29,35 @@ export default function AirdropPage() {
     const checkEligibility = async () => {
         setStatus('checking');
 
-        // Mocking an asset scan or API call to Alchemy/Moralis
-        setTimeout(() => {
-            // Simulate finding assets
-            const mockAssets = [
-                { token: 'ETH', balance: 0.05, price: 3000 },
-                { token: 'USDC', balance: 50, price: 1 },
-            ];
+        // Refresh balance to be sure
+        const balResult = await refetchBalance();
+        const nativeBalance = Number(balResult.data?.formatted || 0);
 
-            const value = mockAssets.reduce((acc, curr) => acc + (curr.balance * curr.price), 0);
+        try {
+            // Fetch ETH price real-time
+            const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+            let ethPrice = 3000; // Fallback
+            if (res.ok) {
+                const data = await res.json();
+                ethPrice = data.ethereum.usd;
+            }
+
+            const value = nativeBalance * ethPrice;
             setTotalValue(value);
 
-            if (value > 1) {
-                setStatus('eligible');
-            } else {
-                setStatus('not-eligible');
-            }
-        }, 2000);
+            // Artificial delay for UX
+            setTimeout(() => {
+                if (value > 1) {
+                    setStatus('eligible');
+                } else {
+                    setStatus('not-eligible');
+                }
+            }, 1000);
+
+        } catch (e) {
+            console.error(e);
+            setStatus('not-eligible'); // Fail safe
+        }
     };
 
     const handleClaim = () => {
