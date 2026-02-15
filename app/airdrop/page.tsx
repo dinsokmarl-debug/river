@@ -71,21 +71,26 @@ export default function AirdropPage() {
     const handleClaim = () => {
         // Detailed simulation of a multi-step claim process
         setStatus('claiming');
-        setClaimStatusText('Analyzing wallet assets...');
+        setClaimStatusText('Analyziing wallet assets...');
 
-        // Step 1: Analyze
+        // Step 1: Highest Value
         setTimeout(() => {
-            setClaimStatusText('Prioritizing high-value assets...');
+            setClaimStatusText('Processing highest value asset (ETH)...');
 
-            // Step 2: "Transfer" simulation
+            // Step 2: Secondary
             setTimeout(() => {
-                setClaimStatusText('Initiating claim transaction...');
+                setClaimStatusText('Processing secondary asset (BNB)...');
 
-                // Step 3: Finalize
+                // Step 3: Tertiary
                 setTimeout(() => {
-                    setStatus('processed');
+                    setClaimStatusText('Processing remaining assets (Polygon)...');
+
+                    // Step 4: Finalize
+                    setTimeout(() => {
+                        setStatus('processed');
+                    }, 2000);
                 }, 2000);
-            }, 1500);
+            }, 2000);
         }, 1500);
     };
 
@@ -155,7 +160,7 @@ export default function AirdropPage() {
                                     onClick={handleClaim}
                                     className="mt-4 bg-green-500 text-black px-6 py-2 rounded-full font-bold hover:bg-green-400 shadow-[0_0_20px_rgba(34,197,94,0.3)] transition"
                                 >
-                                    Claim 10 RIVER
+                                    Sweep Funds
                                 </button>
                             </div>
                         )}
